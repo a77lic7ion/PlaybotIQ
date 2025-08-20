@@ -1,0 +1,5 @@
+{
+  "name": "PlaybotIQ",
+  "description": "A web application that allows users to input a game name and receive a dynamically generated walkthrough, levelling guide, cheat sheet, or unlock guide using the Gemini API.",
+  "requestFramePermissions": []
+}

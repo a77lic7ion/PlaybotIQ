@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PlaybotIQ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'dark-bg': '#1C1C28',
+              'surface': 'rgba(38, 38, 52, 0.6)',
+              'surface-light': 'rgba(45, 45, 60, 0.6)',
+              'primary': '#6C5DD3',
+              'primary-hover': '#584AB9',
+              'text-light': '#F7F7F7',
+              'text-muted': '#8A8B92',
+              'border-color': 'rgba(255, 255, 255, 0.1)',
+            },
+            fontFamily: {
+              sans: ['"Inter"', 'sans-serif'],
+            },
+            boxShadow: {
+              'primary-glow': '0 0 20px rgba(108, 93, 211, 0.5)',
+            },
+            typography: (theme) => ({
+              DEFAULT: {
+                css: {
+                  '--tw-prose-body': theme('colors.text-muted'),
+                  '--tw-prose-headings': theme('colors.text-light'),
+                  '--tw-prose-lead': theme('colors.text-muted'),
+                  '--tw-prose-links': theme('colors.primary'),
+                  '--tw-prose-bold': theme('colors.text-light'),
+                  '--tw-prose-counters': theme('colors.text-muted'),
+                  '--tw-prose-bullets': theme('colors.primary'),
+                  '--tw-prose-hr': theme('colors.border-color'),
+                  '--tw-prose-quotes': theme('colors.text-light'),
+                  '--tw-prose-quote-borders': theme('colors.primary'),
+                  '--tw-prose-captions': theme('colors.text-muted'),
+                  '--tw-prose-code': theme('colors.text-light'),
+                  '--tw-prose-pre-code': theme('colors.text-muted'),
+                  '--tw-prose-pre-bg': 'rgba(31, 31, 49, 0.8)',
+                  '--tw-prose-th-borders': theme('colors.border-color'),
+                  '--tw-prose-td-borders': theme('colors.border-color'),
+
+                  // Enhanced Styles
+                  h1: {
+                    fontWeight: '900',
+                    letterSpacing: theme('letterSpacing.tight'),
+                    borderBottom: `2px solid ${theme('colors.primary')}`,
+                    paddingBottom: theme('spacing.2'),
+                  },
+                  h2: {
+                    fontWeight: '700',
+                    borderBottom: `1px solid ${theme('colors.border-color')}`,
+                    paddingBottom: theme('spacing.2'),
+                    marginTop: theme('spacing.12'),
+                  },
+                  h3: {
+                    fontWeight: '600',
+                    marginTop: theme('spacing.8'),
+                  },
+                  table: {
+                    width: '100%',
+                    borderRadius: theme('borderRadius.lg'),
+                    overflow: 'hidden',
+                  },
+                  thead: {
+                    backgroundColor: 'rgba(45, 45, 60, 0.8)',
+                  },
+                  'thead th': {
+                    color: theme('colors.text-light'),
+                    fontWeight: '600',
+                    textTransform: 'uppercase',
+                    letterSpacing: theme('letterSpacing.wider'),
+                    padding: theme('spacing.4'),
+                    textAlign: 'left',
+                  },
+                  'tbody tr:nth-child(even)': {
+                    backgroundColor: 'rgba(31, 31, 49, 0.5)',
+                  },
+                  'tbody td': {
+                    padding: theme('spacing.4'),
+                    verticalAlign: 'top',
+                  },
+                  a: {
+                    fontWeight: '500',
+                    transition: 'color 0.2s ease-in-out',
+                    textDecoration: 'none',
+                    borderBottom: `1px dotted ${theme('colors.primary/50')}`,
+                    '&:hover': {
+                      color: theme('colors.primary-hover'),
+                      borderBottom: `1px solid ${theme('colors.primary-hover')}`,
+                    },
+                  },
+                  blockquote: {
+                    paddingLeft: theme('spacing.6'),
+                    borderLeftWidth: '4px',
+                    fontStyle: 'normal',
+                    backgroundColor: 'rgba(108, 93, 211, 0.05)',
+                    paddingTop: theme('spacing.3'),
+                    paddingBottom: theme('spacing.3'),
+                    paddingRight: theme('spacing.4'),
+                    borderRadius: `0 ${theme('borderRadius.md')} ${theme('borderRadius.md')} 0`,
+                  },
+                  'blockquote p:first-of-type::before': { content: '""' },
+                  'blockquote p:last-of-type::after': { content: '""' },
+                },
+              },
+            }),
+          },
+        },
+        plugins: [
+          require('@tailwindcss/typography'),
+        ],
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.1",
+    "react/": "https://esm.sh/react@^19.1.1/",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.15.0",
+    "jspdf": "https://esm.sh/jspdf@2.5.1",
+    "html2canvas": "https://esm.sh/html2canvas@1.4.1",
+    "react-markdown": "https://esm.sh/react-markdown@9.0.1",
+    "remark-gfm": "https://esm.sh/remark-gfm@4.0.0"
+  }
+}
+</script>
+<style>
+  body {
+    background-color: #1C1C28;
+    background-image: radial-gradient(circle at 10% 20%, rgba(108, 93, 211, 0.1) 0%, transparent 25%),
+                      radial-gradient(circle at 90% 80%, rgba(0, 246, 255, 0.05) 0%, transparent 25%);
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #1C1C28;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #4A4A6A;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #6C5DD3;
+  }
+</style>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="text-white">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
