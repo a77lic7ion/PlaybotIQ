@@ -20,3 +20,11 @@ export interface Reference {
   uri: string;
   title: string;
 }
+
+export interface HistoryItem {
+  id: number;
+  game_name: string;
+  guide_type: string;
+  platform: string;
+  created_at: string;
+}

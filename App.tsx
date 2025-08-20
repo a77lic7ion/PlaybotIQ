@@ -1,12 +1,13 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { GuideType, Platform, Reference } from './types';
+import { GuideType, Platform, Reference, HistoryItem } from './types';
 import { generateGameGuide } from './services/geminiService';
 import Header from './components/Header';
 import SearchForm from './components/SearchForm';
 import GuideDisplay from './components/GuideDisplay';
 import Footer from './components/Footer';
+import History from './components/History';
 
 const App: React.FC = () => {
   const [gameName, setGameName] = useState<string>('');
@@ -16,7 +17,46 @@ const App: React.FC = () => {
   const [references, setReferences] = useState<Reference[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [isHistoryLoading, setIsHistoryLoading] = useState<boolean>(true);
   const guideContentRef = useRef<HTMLDivElement>(null);
+
+  const fetchHistory = useCallback(async () => {
+    setIsHistoryLoading(true);
+    try {
+      const response = await fetch('/api/get-history');
+      if (!response.ok) {
+        throw new Error('Failed to fetch history');
+      }
+      const data = await response.json();
+      setHistory(data);
+    } catch (err) {
+      console.error('Error fetching history:', err);
+      // Do not show a UI error for this, just log it.
+    } finally {
+      setIsHistoryLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
+
+  const saveHistory = useCallback(async (guide: string) => {
+    try {
+      await fetch('/api/save-history', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ gameName, guideType, platform, guide }),
+      });
+      // Refresh history list after saving
+      await fetchHistory();
+    } catch (err) {
+      console.error('Error saving history:', err);
+      // Fail silently, not a critical path for the user
+    }
+  }, [gameName, guideType, platform, fetchHistory]);
+
 
   const handleGenerate = useCallback(async () => {
     if (!gameName.trim()) {
@@ -33,13 +73,15 @@ const App: React.FC = () => {
       const response = await generateGameGuide(gameName, guideType, platform);
       setGeneratedGuide(response.guide);
       setReferences(response.references);
+      // Save to history on success
+      await saveHistory(response.guide);
     } catch (err) {
       console.error(err);
       setError(err instanceof Error ? err.message : 'An unknown error occurred.');
     } finally {
       setIsLoading(false);
     }
-  }, [gameName, guideType, platform]);
+  }, [gameName, guideType, platform, saveHistory]);
 
   const handleExportPdf = useCallback(async () => {
     const content = guideContentRef.current;
@@ -76,7 +118,7 @@ const App: React.FC = () => {
         <Header />
         <main className="flex-grow p-6 lg:p-8 overflow-y-auto">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 h-full">
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 flex flex-col">
               <SearchForm
                 gameName={gameName}
                 setGameName={setGameName}
@@ -87,6 +129,7 @@ const App: React.FC = () => {
                 onGenerate={handleGenerate}
                 isLoading={isLoading}
               />
+              <History history={history} isLoading={isHistoryLoading} />
             </div>
             <div className="lg:col-span-3">
               <GuideDisplay
